@@ -3,3 +3,5 @@ Deep_Learning/kaggle/classify-leaves/images/
 NLP_Learning/基于Bert的中文分词语/data/data174918/dev.json
 NLP_Learning/基于Bert的中文分词语/data/data174918/test.json
 NLP_Learning/基于Bert的中文分词语/data/data174918/train.json
+NLP_Learning/基于Bert的中文分词语/checkpoints/best.pdparams
+NLP_Learning/基于Bert的中文分词语/checkpoints/final.pdparams
