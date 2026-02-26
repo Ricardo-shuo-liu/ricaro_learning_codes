@@ -5,3 +5,10 @@ NLP_Learning/基于Bert的中文分词语/data/data174918/test.json
 NLP_Learning/基于Bert的中文分词语/data/data174918/train.json
 NLP_Learning/基于Bert的中文分词语/checkpoints/best.pdparams
 NLP_Learning/基于Bert的中文分词语/checkpoints/final.pdparams
+
+NLP_Learning/基于LSTM实现IMDB电影评论情感分析/dataset/dev.txt
+NLP_Learning/基于LSTM实现IMDB电影评论情感分析/dataset/test.txt
+NLP_Learning/基于LSTM实现IMDB电影评论情感分析/dataset/train.txt
+NLP_Learning/基于LSTM实现IMDB电影评论情感分析/dataset/vocab.txt
+NLP_Learning/基于LSTM实现IMDB电影评论情感分析/checkpoints/best.pdparams
+NLP_Learning/基于LSTM实现IMDB电影评论情感分析/checkpoints/final.pdparams
