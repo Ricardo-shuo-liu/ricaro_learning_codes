@@ -12,3 +12,10 @@ NLP_Learning/基于LSTM实现IMDB电影评论情感分析/dataset/train.txt
 NLP_Learning/基于LSTM实现IMDB电影评论情感分析/dataset/vocab.txt
 NLP_Learning/基于LSTM实现IMDB电影评论情感分析/checkpoints/best.pdparams
 NLP_Learning/基于LSTM实现IMDB电影评论情感分析/checkpoints/final.pdparams
+
+NLP_Learning/基于BERT的情感分析/data/data175000/dev.json
+NLP_Learning/基于BERT的情感分析/data/data175000/test.json
+NLP_Learning/基于BERT的情感分析/data/data175000/train.json
+NLP_Learning/基于BERT的情感分析/data/data175000/vocab.txt
+NLP_Learning/基于BERT的情感分析/checkpoints/best.pdparams
+NLP_Learning/基于BERT的情感分析/checkpoints/final.pdparams
