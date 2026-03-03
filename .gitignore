@@ -19,3 +19,9 @@ NLP_Learning/基于BERT的情感分析/data/data175000/train.json
 NLP_Learning/基于BERT的情感分析/data/data175000/vocab.txt
 NLP_Learning/基于BERT的情感分析/checkpoints/best.pdparams
 NLP_Learning/基于BERT的情感分析/checkpoints/final.pdparams
+
+NLP_Learning/基于BERT模型搭建评论观点抽取与分析/checkpoints/best_ext.pdparams
+NLP_Learning/基于BERT模型搭建评论观点抽取与分析/checkpoints/final_ext.pdparams
+NLP_Learning/基于BERT模型搭建评论观点抽取与分析/data/data178684/dev_ext.json
+NLP_Learning/基于BERT模型搭建评论观点抽取与分析/data/data178684/test_ext.json
+NLP_Learning/基于BERT模型搭建评论观点抽取与分析/data/data178684/train_ext.json
