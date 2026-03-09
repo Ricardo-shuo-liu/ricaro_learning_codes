@@ -25,3 +25,8 @@ NLP_Learning/基于BERT模型搭建评论观点抽取与分析/checkpoints/final
 NLP_Learning/基于BERT模型搭建评论观点抽取与分析/data/data178684/dev_ext.json
 NLP_Learning/基于BERT模型搭建评论观点抽取与分析/data/data178684/test_ext.json
 NLP_Learning/基于BERT模型搭建评论观点抽取与分析/data/data178684/train_ext.json
+NLP_Learning/基于BERT模型搭建评论观点抽取与分析/data/data178685/dev_cls.json
+NLP_Learning/基于BERT模型搭建评论观点抽取与分析/data/data178685/test_cls.json
+NLP_Learning/基于BERT模型搭建评论观点抽取与分析/data/data178685/train_cls.json
+NLP_Learning/基于BERT模型搭建评论观点抽取与分析/checkpoints/best_cls.pdparams
+NLP_Learning/基于BERT模型搭建评论观点抽取与分析/checkpoints/final_cls.pdparams
