@@ -6,4 +6,4 @@ def main():
 
 frame = main()
 
-print("-----",frame.f_code.co_name)
+print("-----",frame.f_code.co_name,frame.f_code.co_filename,frame.f_lineno)
