@@ -9,6 +9,7 @@
 
 - C++
 - python
+- Julia
 
 - infra
 
