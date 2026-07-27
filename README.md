@@ -23,3 +23,12 @@
 - cs61a
 
 - mit6.006
+
+使用的图书有：
+
+- 动手学深度学习 （https://zh.d2l.ai/）
+- 动手学强化学习 （https://github.com/boyu-ai/Hands-on-RL）
+- 北京大学Julia（https://math.pku.edu.cn/teachers/lidf/docs/Julia/html/_book/index.html）
+- 现代C++编程 作者（https://github.com/JLospinoso）
+- paddle paddle 的NLP课程 来自 ai studio
+- python 来自 流畅的python
