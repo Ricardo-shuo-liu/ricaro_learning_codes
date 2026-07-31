@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-
 class RMSNorm(nn.Module):
     def __init__(self, dim: int, eps: float = 1e-6):
         super().__init__()
