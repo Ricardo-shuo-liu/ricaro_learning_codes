@@ -10,7 +10,7 @@
 - C++
 - python
 - Julia
-
+- agent应用开发
 - infra
 
 
@@ -32,3 +32,5 @@
 - 现代C++编程 作者（https://github.com/JLospinoso）
 - paddle paddle 的NLP课程 来自 ai studio
 - python 来自 流畅的python
+
+- 来自datawahle的开源课程 [base_llm](https://github.com/datawhalechina/base-llm)

@@ -45,3 +45,6 @@ NLP_Learning/outputs/checkpoint-200/training_args.bin
 NLP_Learning/outputs/runs/Aug02_09-56-03_ricardo-Legion-Y9000P-IRX9/events.out.tfevents.1785635763.ricardo-Legion-Y9000P-IRX9.9363.0
 NLP_Learning/outputs/runs/Aug02_10-03-13_ricardo-Legion-Y9000P-IRX9/events.out.tfevents.1785636193.ricardo-Legion-Y9000P-IRX9.7579.0
 NLP_Learning/outputs/runs/Aug02_10-09-13_ricardo-Legion-Y9000P-IRX9/events.out.tfevents.1785636553.ricardo-Legion-Y9000P-IRX9.8504.0
+
+
+agent/.env
