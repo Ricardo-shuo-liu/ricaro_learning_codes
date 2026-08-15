@@ -6,13 +6,13 @@
 - 深度学习
 - NLP
 - 强化学习
-
 - C++
 - python
 - Julia
 - agent应用开发
 - infra
 
+论文笔记(因为这个部分内容大部分存储在我的另一个操作系统上所以目前只有一个之后可能会上传)
 
 这个仓库的目的是为了方便我寻找代码
 
@@ -33,4 +33,9 @@
 - paddle paddle 的NLP课程 来自 ai studio
 - python 来自 流畅的python
 
-- 来自datawahle的开源课程 [base_llm](https://github.com/datawhalechina/base-llm)
+- 来自datawhale的开源课程 [base_llm](https://github.com/datawhalechina/base-llm)
+- 来自datawhale的开源课程 [hello_agent](https://github.com/datawhalechina/hello-agents)
+
+
+**因为部分内容我觉得没有写的必要或者原课程废话太多所以代码并不完善**
+
