@@ -28,7 +28,10 @@ model = os.getenv("LLM_MODEL_ID")
 
 SYSTEM = f"You are a coding agent at {WORKDIR}. Use tools to solve tasks. Act, don't explain."
 
-
+SUB_SYSTEM = (
+    f"You are a coding agent at {WORKDIR}. "
+    "Complete the given task, then return a concise final answer."
+)
 
 def run_bash(command: str) -> str:
     dangerous = ["rm -rf /", "sudo", "shutdown", "reboot", "> /dev/"]
@@ -96,83 +99,8 @@ def run_glob(pattern: str) -> str:
     except Exception as e:
         return f"Error: {e}"
 
-import ast
-class TodoManager:
-    def __init__(self):
-        self.items: list[dict] = []
 
-    def update(self, todos: list | str) -> str:
-        if isinstance(todos, str):
-            try:
-                todos = json.loads(todos)
-            except json.JSONDecodeError:
-                try:
-                    todos = ast.literal_eval(todos)
-                except (SyntaxError, ValueError) as e:
-                    raise ValueError("todos must be a list or JSON array string") from e
-
-        if not isinstance(todos, list):
-            raise ValueError("todos must be a list")
-        if len(todos) > 20:
-            raise ValueError("Max 20 todos allowed")
-
-        validated = []
-        in_progress_count = 0
-
-        for index, todo in enumerate(todos):
-            if not isinstance(todo, dict):
-                raise ValueError(f"todos[{index}] must be an object")
-
-            content = str(todo.get("content", "")).strip()
-            status = str(todo.get("status", "pending")).lower()
-
-            if not content:
-                raise ValueError(f"todos[{index}] requires content")
-            if status not in ("pending", "in_progress", "completed"):
-                raise ValueError(f"todos[{index}] has invalid status '{status}'")
-            if status == "in_progress":
-                in_progress_count += 1
-
-            validated.append({"content": content, "status": status})
-
-        if in_progress_count > 1:
-            raise ValueError("Only one todo can be in_progress at a time")
-
-        self.items = validated
-        return self.render()
-
-    def render(self) -> str:
-        if not self.items:
-            return "No todos."
-
-        lines = []
-        for todo in self.items:
-            marker = {
-                "pending": "[ ]",
-                "in_progress": "[>]",
-                "completed": "[x]",
-            }[todo["status"]]
-
-            lines.append(f"{marker} {todo['content']}")
-
-        done = sum(todo["status"] == "completed" for todo in self.items)
-        lines.append(f"\n({done}/{len(self.items)} completed)")
-        return "\n".join(lines)
-
-
-TODO = TodoManager()
-
-
-def run_todo_write(todos: list | str) -> str:
-    try:
-        output = TODO.update(todos)
-    except ValueError as e:
-        return f"Error: {e}"
-    print(f"\n\033[33m## Current Tasks\033[0m\n{output}")
-    return output
-
-
-TOOLS=[
+BASE_TOOLS = [
     {
         "type":"function",
         "function":{
@@ -241,48 +169,16 @@ TOOLS=[
                 "required": ["pattern"]
             }
         }
-    },
-    {
-        "type":"function",
-        "function":{
-            "name":"todo_write",
-            "description":"Create and manage a task list for your current coding session.",
-            "parameters":{
-                "type":"object",
-                "properties":{
-                    "todos":{
-                        "type":"array",
-                        "maxItems": 20,
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "content": {
-                                    "type": "string", 
-                                    "minLength": 1
-                                    }, 
-                                    "status": {
-                                        "type": "string", 
-                                        "enum": ["pending", "in_progress", "completed"]
-                                        }
-                            },
-                            "required": ["content", "status"],
-                        }
-                    }
-                },
-                "required": ["todos"],
-            }
-        }
     }
 ]
 
 
-TOOL_HANDLERS = {
+BASE_HANDLERS = {
     "bash": run_bash,
     "read_file": run_read,
     "write_file": run_write,
     "edit_file": run_edit,
     "glob": run_glob,
-    "todo_write": run_todo_write
 }
 
 
@@ -364,6 +260,93 @@ register_hook("PreToolUse", log_hook)
 register_hook("PostToolUse", large_output_hook)
 register_hook("Stop", summary_hook)
 
+def execute_tool(tc,
+                 handlers: dict) -> str:
+    blocked = trigger_hooks("PreToolUse", tc)
+
+    if blocked:
+        return str(blocked)
+    func_name = tc.function.name
+            
+    args = json.loads(tc.function.arguments)
+    handler = handlers.get(func_name)
+    try:
+        output = handler(**args) if handler else f"Unknown: {func_name}"
+    except Exception as e:
+        output = f"Error: {e}"
+    trigger_hooks("PostToolUse", tc, output)
+    return str(output)
+SUB_TOOLS = list(BASE_TOOLS)
+SUB_HANDLERS = dict(BASE_HANDLERS)
+
+def extract_text(content) -> str:
+    if not isinstance(content, list):
+        return str(content or "")
+    
+    parts = []
+    for block in content:
+        if isinstance(block, dict) and block.get("type") == "text":
+            parts.append(block.get("text", ""))
+    return "\n".join(parts)
+
+
+def run_subagent(prompt: str) -> str:
+    print("\n\033[35m[Subagent started]\033[0m")
+    messages = [{"role":"system","content":SUB_SYSTEM},
+                {"role": "user", "content": prompt}]
+
+    for _ in range(30):
+        response = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            tools=SUB_TOOLS,
+            max_tokens=8000,
+        )
+        choice = response.choices[0]
+        msg = choice.message
+
+        messages.append(msg.model_dump())
+
+        if choice.finish_reason != "tool_calls":
+            force = trigger_hooks("Stop", messages)
+            if force:
+                messages.append({"role": "user", "content": force})
+                continue
+            print("\033[35m[Subagent done]\033[0m")
+            return extract_text(msg.content) or "(no summary)"
+        
+        for tc in msg.tool_calls:
+            output = execute_tool(tc,SUB_HANDLERS)
+            print(f"  \033[90m[sub] {tc.function.name}: {output[:100]}\033[0m")
+            messages.append({
+                    "role": "tool",
+                    "tool_call_id": tc.id,
+                    "content": output
+                })
+
+    print("\033[35m[Subagent stopped]\033[0m")
+    return "Subagent stopped after 30 turns without a final answer."
+
+
+TASK_TOOL = {
+    "type": "function",
+    "function": {
+        "name": "task",
+        "description": "Run a subagent with fresh conversation context and return its final text.",
+        "parameters": {
+            "type": "object",
+            "properties": {"prompt": {"type": "string", "minLength": 1}},
+            "required": ["prompt"],
+        }
+    }
+}
+
+
+TOOLS = [*BASE_TOOLS, TASK_TOOL]
+TOOL_HANDLERS = {**BASE_HANDLERS, "task": run_subagent}
+
+
+
 
 def agent_loop(messages: list):
     while True:
@@ -384,9 +367,8 @@ def agent_loop(messages: list):
                 messages.append({"role": "user", "content": force})
                 continue
             return
-        rounds_since_todo = 0
-        used_todo = False
         for tc in msg.tool_calls:
+
             blocked = trigger_hooks("PreToolUse", tc)
 
             if blocked:
@@ -403,26 +385,18 @@ def agent_loop(messages: list):
             except Exception as e:
                 output = f"Error: {e}"
             trigger_hooks("PostToolUse", tc, output)
-
-            if func_name == "todo_write":
-                used_todo = True
             messages.append({
                     "role": "tool",
                     "tool_call_id": tc.id,
                     "content": output
                 })
-        rounds_since_todo = 0 if used_todo else rounds_since_todo + 1
-        if rounds_since_todo >= 3:
-            messages.append({"role": "user",
-                            "conntent": "<reminder>Update your todos.</reminder>"})
-            rounds_since_todo = 0
 
 
 
 if __name__ == "__main__":
-    print("s05: TodoWrite - plan before execution")
+    print("s06: Subagent - fresh messages, final text returns")
     print("Enter a question, press Enter to send. Type q to quit.\n")
-
+    
     history = [{"role": "system", "content": SYSTEM}]
 
     while True:
