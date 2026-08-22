@@ -1,0 +1,10 @@
+{
+  "id": "task_b4cac76c",
+  "subject": "create API endpoints",
+  "description": "Implement the API endpoints for the application.",
+  "status": "pending",
+  "owner": null,
+  "blockedBy": [
+    "task_afbb0549"
+  ]
+}
