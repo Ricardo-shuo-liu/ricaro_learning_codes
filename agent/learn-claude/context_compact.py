@@ -310,7 +310,8 @@ class ContextCompactor:
 
     @staticmethod
     def estimate_chars(messages: list) -> int:
-        return len(json.dumps(messages, default=str, ensure_ascii=False))
+        return len(json.dumps(messages,
+                              default=str, ensure_ascii=False))
 
     @staticmethod
     def has_tool_use(message: dict) -> bool:
