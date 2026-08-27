@@ -316,7 +316,8 @@ scheduled_jobs: dict[str, CronJob] = {}
 cron_queue: list[CronJob] = []
 cron_lock = threading.RLock()
 
-def _cron_field_matches(field: str, value: int) -> bool:
+def _cron_field_matches(field: str,
+                        value: int) -> bool:
     if field == "*":
         return True
     if field.startswith("*/"):
@@ -328,7 +329,8 @@ def _cron_field_matches(field: str, value: int) -> bool:
         return int(start) <= value <= int(end)
     return value == int(field)
 
-def cron_matches(cron_expr: str, moment: datetime) -> bool:
+def cron_matches(cron_expr: str,
+                 moment: datetime) -> bool:
     fields = cron_expr.strip().split()
     if len(fields) != 5:
         return False
@@ -496,7 +498,8 @@ def cancel_job(job_id: str) -> str:
         print(f"  [cron] cancelled {job_id}")
         return f"Cancelled {job_id}"
 
-def _enqueue_due_job(job: CronJob, minute_marker: str | None = None):
+def _enqueue_due_job(job: CronJob,
+                     minute_marker: str | None = None):
     old_pending = job.pending_delivery
     old_last_fired = job.last_fired
     job.pending_delivery = True
@@ -727,8 +730,10 @@ def start_runtime_threads():
         load_durable_jobs()
         RUNTIME_STOP.clear()
         runtime_threads.extend([
-            threading.Thread(target=cron_scheduler_loop, name="cron‑scheduler", daemon=True),
-            threading.Thread(target=queue_processor_loop, name="cron‑queue‑processor", daemon=True),
+            threading.Thread(target=cron_scheduler_loop,
+                             name="cron‑scheduler", daemon=True),
+            threading.Thread(target=queue_processor_loop,
+                             name="cron‑queue‑processor", daemon=True),
         ])
         for t in runtime_threads:
             t.start()
