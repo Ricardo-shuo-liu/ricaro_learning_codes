@@ -1950,7 +1950,8 @@ def agent_loop(messages: list):
         try:
             response = client.chat.completions.create(
                 model=MODEL,
-                messages=[{"role": "system", "content": SYSTEM}, *messages],
+                messages=[{"role": "system", "content": SYSTEM},
+                          *messages],
                 tools=TOOLS,
                 max_tokens=8000,
             )
@@ -2012,7 +2013,7 @@ def wait_for_cli_event() -> tuple[str, str | None]:
                 print()
             return "wake", None
         if not prompt_visible:
-            print("s13 >> ", end="", flush=True)
+            print(">> ", end="", flush=True)
             prompt_visible = True
         readable, _, _ = select.select([sys.stdin], [], [], 0.25)
         if readable:
