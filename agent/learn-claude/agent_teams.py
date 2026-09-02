@@ -820,7 +820,7 @@ RESERVED_TEAMMATE_NAMES = {"lead", "agent"}
 
 def is_valid_agent_name(name: str) -> bool:
     return bool(VALID_AGENT_NAME.fullmatch(name))
-
+	
 
 class MessageBus:
     """Thread-safe file mailboxes with destructive reads."""
