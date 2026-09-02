@@ -36,6 +36,8 @@
 - 来自datawhale的开源课程 [base_llm](https://github.com/datawhalechina/base-llm)
 - 来自datawhale的开源课程 [hello_agent](https://github.com/datawhalechina/hello-agents)
 
+使用的开源仓库有：
+- 来自shareAI的 [learn-claude-code](https://github.com/shareAI-lab/learn-claude-code)
 
 **因为部分内容我觉得没有写的必要或者原课程废话太多所以代码并不完善**
 
